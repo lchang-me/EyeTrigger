@@ -1,3 +1,9 @@
+## Acknowledgements
+
+All code and documentation for EyeTrigger were generated with the assistance of ChatGPT.
+
+Thanks, ChatGPT, for helping bring this project to life.
+
 # EyeTrigger
 
 EyeTrigger is a lightweight macOS menu-bar application designed to reduce prolonged screen exposure through adaptive eye-load tracking and staged break reminders.
