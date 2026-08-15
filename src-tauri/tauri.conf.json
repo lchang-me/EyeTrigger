@@ -13,9 +13,10 @@
     "macOSPrivateApi": true,
     "windows": [
       {
-        "title": "eyetrigger",
-        "width": 800,
-        "height": 600
+        "title": "EyeTrigger",
+        "width": 500,
+        "height": 520,
+	"visible": false
       }
     ],
     "security": {

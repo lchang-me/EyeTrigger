@@ -1,10 +1,7 @@
 use tauri::{
     menu::{Menu, MenuItem},
     tray::{
-        MouseButton,
-        MouseButtonState,
         TrayIconBuilder,
-        TrayIconEvent,
     },
     Manager,
 };
@@ -40,11 +37,6 @@ pub fn setup_tray(app: &tauri::App) -> tauri::Result<()> {
     )?;
 
     TrayIconBuilder::with_id("eyetrigger-tray")
-        .icon(
-            app.default_window_icon()
-                .unwrap()
-                .clone()
-        )
         .title("👁 0%")
         .tooltip("EyeTrigger")
         .menu(&menu)
@@ -73,23 +65,40 @@ pub fn setup_tray(app: &tauri::App) -> tauri::Result<()> {
                 _ => {}
             }
         })
-        .on_tray_icon_event(|tray, event| {
-            if let TrayIconEvent::Click {
-                button: MouseButton::Left,
-                button_state: MouseButtonState::Up,
-                ..
-            } = event
-            {
-                let app = tray.app_handle();
-
-                if let Some(window) =
-                    app.get_webview_window("main")
+        .on_tray_icon_event(
+            |tray, event| {
+                use tauri::tray::{
+                    MouseButton,
+                    MouseButtonState,
+                    TrayIconEvent,
+                };
+        
+                if let TrayIconEvent::Click {
+                    button: MouseButton::Left,
+                    button_state: MouseButtonState::Up,
+                    ..
+                } = event
                 {
-                    let _ = window.show();
-                    let _ = window.set_focus();
+                    let app =
+                        tray.app_handle();
+        
+                    if let Some(window) =
+                        app.get_webview_window(
+                            "main",
+                        )
+                    {
+                        let _ =
+                            window.unminimize();
+        
+                        let _ =
+                            window.show();
+        
+                        let _ =
+                            window.set_focus();
+                    }
                 }
-            }
-        })
+            },
+        )
         .build(app)?;
 
     Ok(())

@@ -1,5 +1,6 @@
 import {
   useEffect,
+  useRef,
   useState,
 } from "react";
 
@@ -28,14 +29,17 @@ function formatCountdown(
 
 
 function DimWindow() {
-  const [secondsLeft, setSecondsLeft] =
-    useState(
-      STRONG_BREAK_SECONDS
-    );
+  const [
+    secondsLeft,
+    setSecondsLeft,
+  ] = useState(
+    STRONG_BREAK_SECONDS
+  );
+
+  const finishing =
+    useRef(false);
 
 
-  // 一进入 Level 3，
-  // 立刻开始正式休息状态。
   useEffect(() => {
     void invoke("start_break");
   }, []);
@@ -43,15 +47,31 @@ function DimWindow() {
 
   useEffect(() => {
     if (secondsLeft <= 0) {
+      if (finishing.current) {
+        return;
+      }
+
+      finishing.current = true;
+
       const finish =
         async () => {
-          await invoke(
-            "complete_strong_break"
-          );
+          try {
+            await invoke(
+              "complete_strong_break"
+            );
 
-          await invoke(
-            "close_dim_window"
-          );
+            await invoke(
+              "close_dim_window"
+            );
+          } catch (error) {
+            finishing.current =
+              false;
+
+            console.error(
+              "Failed to finish strong break:",
+              error
+            );
+          }
         };
 
       void finish();
@@ -74,26 +94,75 @@ function DimWindow() {
   }, [secondsLeft]);
 
 
+  const progress =
+    1 -
+    secondsLeft /
+      STRONG_BREAK_SECONDS;
+
+
   return (
-    <main className="dim-window">
-      <h1>
-        Time to stop
-      </h1>
+    <main className="strong-shell">
+      <div className="strong-glow" />
 
-      <p>
-        You skipped your break.
-      </p>
 
-      <p>
-        Please step away from
-        the screen.
-      </p>
+      <header className="strong-header">
+        <span className="strong-logo">
+          ◉
+        </span>
 
-      <div className="dim-countdown">
-        {formatCountdown(
-          secondsLeft
-        )}
-      </div>
+        <span>
+          EyeTrigger
+        </span>
+      </header>
+
+
+      <section className="strong-content">
+        <span className="strong-label">
+          RECOVERY REQUIRED
+        </span>
+
+
+        <h1>
+          Time to step away.
+        </h1>
+
+
+        <p>
+          Your eye load continued to
+          rise after the break reminder.
+          Give your eyes time to recover.
+        </p>
+
+
+        <div className="strong-countdown">
+          {formatCountdown(
+            secondsLeft
+          )}
+        </div>
+
+
+        <span className="strong-caption">
+          No screen. Look farther away,
+          move around, and relax.
+        </span>
+
+
+        <div className="strong-progress">
+          <div
+            className="strong-progress-fill"
+            style={{
+              width:
+                `${progress * 100}%`,
+            }}
+          />
+        </div>
+      </section>
+
+
+      <footer className="strong-footer">
+        EyeTrigger will return automatically
+        when recovery is complete.
+      </footer>
     </main>
   );
 }

@@ -677,7 +677,25 @@ pub fn run() {
         // ----------------------------------------------------
         // Setup
         // ----------------------------------------------------
-
+        .on_window_event(
+            |window, event| {
+                if window.label() != "main" {
+                    return;
+                }
+        
+                if let tauri::WindowEvent::CloseRequested {
+                    api,
+                    ..
+                } = event
+                {
+                    // 阻止真正关闭
+                    api.prevent_close();
+        
+                    // 只是隐藏主窗口
+                    let _ = window.hide();
+                }
+            },
+        )
         .setup(|app| {
             #[cfg(target_os = "macos")]
             {
@@ -685,6 +703,9 @@ pub fn run() {
                     .set_activation_policy(
                         tauri::ActivationPolicy::Accessory,
                     )?;
+        
+                app.handle()
+                    .set_dock_visibility(false)?;
             }
         
             tray::setup_tray(app)?;

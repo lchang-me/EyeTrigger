@@ -1,4 +1,4 @@
-const WORK_TAU: f64 = 80.0;
+const WORK_TAU: f64 = 1800.0;
 
 // 普通短暂停顿恢复比较慢
 const SHORT_REST_TAU: f64 = 1800.0;

@@ -2,54 +2,231 @@ html,
 body,
 #root {
   margin: 0;
+
   width: 100%;
   height: 100%;
-  background: transparent;
+
+  overflow: hidden;
+
+  background: #0d0f11;
 }
 
-.dim-overlay {
+
+.strong-shell {
+  position: relative;
+
+  box-sizing: border-box;
+
   width: 100vw;
   height: 100vh;
 
+  overflow: hidden;
+
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
 
-  background: rgba(0, 0, 0, 0.55);
+  padding: 38px 46px;
 
-  color: white;
+  background:
+    radial-gradient(
+      circle at 50% 45%,
+      rgba(130, 216, 172, 0.075),
+      transparent 32%
+    ),
+    linear-gradient(
+      180deg,
+      #101214,
+      #0b0d0f
+    );
+
+  color:
+    rgba(255, 255, 255, 0.94);
 
   font-family:
     -apple-system,
     BlinkMacSystemFont,
+    "SF Pro Display",
     "Segoe UI",
     sans-serif;
+
+  user-select: none;
 }
 
-.dim-message {
+
+.strong-glow {
+  position: absolute;
+
+  left: 50%;
+  top: 50%;
+
+  width: 500px;
+  height: 500px;
+
+  transform:
+    translate(-50%, -50%);
+
+  border-radius: 50%;
+
+  background:
+    rgba(130, 216, 172, 0.035);
+
+  filter: blur(80px);
+
+  pointer-events: none;
+}
+
+
+.strong-header {
+  position: relative;
+  z-index: 1;
+
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+
+  color:
+    rgba(255, 255, 255, 0.32);
+
+  font-size: 12px;
+  font-weight: 550;
+}
+
+
+.strong-logo {
+  color: #82d8ac;
+
+  font-size: 15px;
+}
+
+
+.strong-content {
+  position: relative;
+  z-index: 1;
+
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
   text-align: center;
 }
 
-.dim-brand {
+
+.strong-label {
+  margin-bottom: 18px;
+
+  color: #82d8ac;
+
+  font-size: 10px;
+  font-weight: 700;
+
+  letter-spacing: 0.18em;
+}
+
+
+.strong-content h1 {
+  margin: 0;
+
+  font-size:
+    clamp(
+      30px,
+      4vw,
+      52px
+    );
+
+  font-weight: 560;
+
+  letter-spacing: -0.045em;
+}
+
+
+.strong-content p {
+  max-width: 520px;
+
+  margin:
+    14px 0 38px;
+
+  color:
+    rgba(255, 255, 255, 0.38);
+
   font-size: 14px;
-  letter-spacing: 3px;
-  opacity: 0.6;
-  margin-bottom: 24px;
+
+  line-height: 1.6;
 }
 
-.dim-message h1 {
-  font-size: 42px;
-  font-weight: 500;
-  margin: 0 0 12px;
+
+.strong-countdown {
+  color:
+    rgba(255, 255, 255, 0.95);
+
+  font-size:
+    clamp(
+      78px,
+      11vw,
+      150px
+    );
+
+  font-weight: 420;
+
+  line-height: 0.95;
+
+  letter-spacing: -0.065em;
 }
 
-.dim-message p {
-  font-size: 17px;
-  opacity: 0.7;
+
+.strong-caption {
+  margin-top: 24px;
+
+  color:
+    rgba(255, 255, 255, 0.34);
+
+  font-size: 12px;
 }
 
-.dim-countdown {
-  margin-top: 28px;
-  font-size: 42px;
-  font-weight: 200;
+
+.strong-progress {
+  width:
+    min(
+      380px,
+      50vw
+    );
+
+  height: 2px;
+
+  margin-top: 31px;
+
+  overflow: hidden;
+
+  border-radius: 999px;
+
+  background:
+    rgba(255, 255, 255, 0.07);
+}
+
+
+.strong-progress-fill {
+  height: 100%;
+
+  border-radius: inherit;
+
+  background: #82d8ac;
+
+  transition:
+    width 1s linear;
+}
+
+
+.strong-footer {
+  position: relative;
+  z-index: 1;
+
+  text-align: center;
+
+  color:
+    rgba(255, 255, 255, 0.19);
+
+  font-size: 10px;
 }

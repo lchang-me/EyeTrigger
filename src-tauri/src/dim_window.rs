@@ -5,11 +5,38 @@ use tauri::{
     WebviewWindowBuilder,
 };
 
+#[cfg(target_os = "macos")]
+use tauri::ActivationPolicy;
+
+
+// ============================================================
+// Level 3
+// ============================================================
+
 pub fn show_dim(
     app: &AppHandle,
 ) -> Result<(), String> {
-    // 如果强提醒窗口已经存在，
-    // 直接显示并切到前台
+    // --------------------------------------------------------
+    // macOS:
+    //
+    // EyeTrigger 平时是 Accessory menu-bar app。
+    // Level 3 需要真正进入 native fullscreen Space，
+    // 所以这里临时切回 Regular。
+    // --------------------------------------------------------
+
+    #[cfg(target_os = "macos")]
+    {
+        app.set_activation_policy(
+            ActivationPolicy::Regular,
+        )
+        .map_err(|e| e.to_string())?;
+    }
+
+
+    // --------------------------------------------------------
+    // 如果窗口已经存在
+    // --------------------------------------------------------
+
     if let Some(window) =
         app.get_webview_window("dim")
     {
@@ -21,13 +48,26 @@ pub fn show_dim(
             .set_focus()
             .map_err(|e| e.to_string())?;
 
+        // 关键：
+        // 明确请求 native fullscreen
+        window
+            .set_fullscreen(true)
+            .map_err(|e| e.to_string())?;
+
+        println!(
+            "EyeTrigger: strong window entered fullscreen"
+        );
+
         return Ok(());
     }
 
-    // 创建 macOS 原生 fullscreen window
+
+    // --------------------------------------------------------
+    // 先创建普通窗口
     //
-    // 这里不要调用 make_reminder_visible_everywhere，
-    // 因为 Level 3 的目的就是建立自己的 fullscreen Space。
+    // 不要在 Builder 里直接 .fullscreen(true)
+    // --------------------------------------------------------
+
     let window =
         WebviewWindowBuilder::new(
             app,
@@ -37,26 +77,54 @@ pub fn show_dim(
             ),
         )
         .title("EyeTrigger")
-        .fullscreen(true)
+
+        // 先普通创建
+        .fullscreen(false)
+
+        // fullscreen transition 时保持正常 window capability
+        .resizable(true)
+
         .decorations(false)
-        .resizable(false)
         .always_on_top(true)
+        .focused(true)
         .build()
+        .map_err(|e| e.to_string())?;
+
+
+    // --------------------------------------------------------
+    // 先成为真正的前台窗口
+    // --------------------------------------------------------
+
+    window
+        .show()
         .map_err(|e| e.to_string())?;
 
     window
         .set_focus()
         .map_err(|e| e.to_string())?;
 
+
+    // --------------------------------------------------------
+    // 再请求 macOS native fullscreen
+    //
+    // 这个才应该产生新的 fullscreen Space。
+    // --------------------------------------------------------
+
+    window
+        .set_fullscreen(true)
+        .map_err(|e| e.to_string())?;
+
+
+    println!(
+        "EyeTrigger: strong window created and fullscreen requested"
+    );
+
     Ok(())
 }
 
 
 // ============================================================
-// Tauri command wrapper
-//
-// 前端仍然可以：
-// invoke("show_dim_window")
+// Frontend command
 // ============================================================
 
 #[tauri::command]
@@ -68,7 +136,7 @@ pub async fn show_dim_window(
 
 
 // ============================================================
-// Rust 后台直接调用的关闭函数
+// Close Level 3
 // ============================================================
 
 pub fn close_dim(
@@ -77,18 +145,39 @@ pub fn close_dim(
     if let Some(window) =
         app.get_webview_window("dim")
     {
+        // 先退出 fullscreen
+        let _ =
+            window.set_fullscreen(false);
+
         window
             .close()
             .map_err(|e| e.to_string())?;
     }
 
+
+    // --------------------------------------------------------
+    // Level 3结束后恢复 menu-bar utility 模式
+    // --------------------------------------------------------
+
+    #[cfg(target_os = "macos")]
+    {
+        app.set_activation_policy(
+            ActivationPolicy::Accessory,
+        )
+        .map_err(|e| e.to_string())?;
+
+        app.set_dock_visibility(false)
+            .map_err(|e| e.to_string())?;
+    }
+
+
+    println!(
+        "EyeTrigger: strong window closed"
+    );
+
     Ok(())
 }
 
-
-// ============================================================
-// Tauri command wrapper
-// ============================================================
 
 #[tauri::command]
 pub fn close_dim_window(

@@ -1,73 +1,292 @@
-.break-window {
+html,
+body,
+#root {
+  margin: 0;
+
+  width: 100%;
+  height: 100%;
+
+  overflow: hidden;
+
+  background: transparent;
+}
+
+
+.break-shell {
+  box-sizing: border-box;
+
   width: 100vw;
   height: 100vh;
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  padding: 22px;
 
-  background: #17181a;
+  display: flex;
+  flex-direction: column;
+
+  color:
+    rgba(255, 255, 255, 0.94);
 
   font-family:
     -apple-system,
     BlinkMacSystemFont,
+    "SF Pro Display",
     "Segoe UI",
     sans-serif;
 
-  color: white;
+  background:
+    radial-gradient(
+      circle at 50% -10%,
+      rgba(130, 216, 172, 0.14),
+      transparent 48%
+    ),
+    #17191c;
+
+  border:
+    1px solid
+    rgba(255, 255, 255, 0.07);
+
+  border-radius: 22px;
 }
 
-.break-card {
-  width: 340px;
+
+.break-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+
+.break-brand {
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+
+  color:
+    rgba(255, 255, 255, 0.38);
+
+  font-size: 9px;
+  font-weight: 650;
+
+  letter-spacing: 0.13em;
+}
+
+
+.break-eye {
+  color: #82d8ac;
+
+  font-size: 14px;
+}
+
+
+.break-duration {
+  padding: 5px 8px;
+
+  border-radius: 999px;
+
+  background:
+    rgba(255, 255, 255, 0.055);
+
+  color:
+    rgba(255, 255, 255, 0.36);
+
+  font-size: 9px;
+  font-weight: 650;
+
+  letter-spacing: 0.1em;
+}
+
+
+.break-content {
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
   text-align: center;
 }
 
-.break-card h1 {
-  margin-bottom: 24px;
+
+.break-time-preview {
+  margin-bottom: 12px;
+
+  color: #82d8ac;
+
+  font-size: 46px;
+  font-weight: 500;
+
+  line-height: 1;
+
+  letter-spacing: -0.055em;
+}
+
+
+.break-content h1 {
+  margin:
+    0 0 7px;
+
   font-size: 18px;
-  opacity: 0.6;
+  font-weight: 620;
+
+  letter-spacing: -0.025em;
 }
 
-.break-card h2 {
-  font-size: 28px;
-  margin-bottom: 16px;
+
+.break-content p {
+  max-width: 310px;
+
+  margin:
+    0 0 20px;
+
+  color:
+    rgba(255, 255, 255, 0.43);
+
+  font-size: 12px;
+
+  line-height: 1.5;
 }
 
-.break-card p {
-  line-height: 1.6;
-  opacity: 0.75;
-}
 
 .break-actions {
-  margin-top: 30px;
+  width: 100%;
 
   display: flex;
-  justify-content: center;
-  gap: 12px;
+
+  gap: 9px;
 }
 
-.break-card button {
-  padding: 10px 18px;
 
-  border: none;
-  border-radius: 10px;
+.break-actions button {
+  height: 38px;
+
+  border: 0;
+  border-radius: 11px;
+
+  font-size: 12px;
+  font-weight: 580;
 
   cursor: pointer;
+
+  transition:
+    transform 0.12s ease,
+    background 0.12s ease;
 }
 
-.break-card button.primary {
-  font-weight: 600;
+
+.break-actions button:active {
+  transform:
+    scale(0.985);
 }
 
-.break-label {
-  font-size: 15px;
-  letter-spacing: 4px;
-  opacity: 0.6;
+
+.break-primary {
+  flex: 1;
+
+  background: #82d8ac;
+
+  color: #142019;
 }
 
-.countdown {
-  margin: 24px;
 
-  font-size: 88px;
-  font-weight: 200;
+.break-primary:hover {
+  background: #91dfb8;
+}
+
+
+.break-secondary {
+  width: 88px;
+
+  background:
+    rgba(255, 255, 255, 0.07);
+
+  color:
+    rgba(255, 255, 255, 0.6);
+}
+
+
+.break-secondary:hover {
+  background:
+    rgba(255, 255, 255, 0.1);
+}
+
+
+.break-orbit {
+  width: 128px;
+  height: 128px;
+
+  margin-bottom: 16px;
+
+  display: grid;
+  place-items: center;
+
+  border-radius: 50%;
+
+  border:
+    1px solid
+    rgba(130, 216, 172, 0.28);
+
+  box-shadow:
+    0 0 48px
+    rgba(130, 216, 172, 0.09);
+}
+
+
+.break-countdown {
+  color: #82d8ac;
+
+  font-size: 37px;
+  font-weight: 500;
+
+  letter-spacing: -0.05em;
+}
+
+
+.break-progress {
+  width: 220px;
+  height: 3px;
+
+  overflow: hidden;
+
+  border-radius: 999px;
+
+  background:
+    rgba(255, 255, 255, 0.07);
+}
+
+
+.break-progress-fill {
+  height: 100%;
+
+  border-radius: inherit;
+
+  background: #82d8ac;
+
+  transition:
+    width 1s linear;
+}
+
+
+.break-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 7px;
+
+  color:
+    rgba(255, 255, 255, 0.23);
+
+  font-size: 9px;
+}
+
+
+.footer-dot {
+  width: 5px;
+  height: 5px;
+
+  border-radius: 50%;
+
+  background: #82d8ac;
 }
