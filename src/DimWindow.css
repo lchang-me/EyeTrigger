@@ -1,0 +1,55 @@
+html,
+body,
+#root {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+}
+
+.dim-overlay {
+  width: 100vw;
+  height: 100vh;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: rgba(0, 0, 0, 0.55);
+
+  color: white;
+
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+}
+
+.dim-message {
+  text-align: center;
+}
+
+.dim-brand {
+  font-size: 14px;
+  letter-spacing: 3px;
+  opacity: 0.6;
+  margin-bottom: 24px;
+}
+
+.dim-message h1 {
+  font-size: 42px;
+  font-weight: 500;
+  margin: 0 0 12px;
+}
+
+.dim-message p {
+  font-size: 17px;
+  opacity: 0.7;
+}
+
+.dim-countdown {
+  margin-top: 28px;
+  font-size: 42px;
+  font-weight: 200;
+}
