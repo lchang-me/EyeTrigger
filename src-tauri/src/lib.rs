@@ -625,12 +625,32 @@ fn complete_break(
     tauri::mobile_entry_point
 )]
 pub fn run() {
-    tauri::Builder::default()
+    // ========================================================
+    // Base Tauri builder
+    // ========================================================
 
-        // ----------------------------------------------------
-        // Global state
-        // ----------------------------------------------------
-        .plugin(tauri_nspanel::init())
+    let builder =
+        tauri::Builder::default();
+
+
+    // ========================================================
+    // macOS only:
+    // NSPanel support for Level 1 / Level 2 reminders
+    // ========================================================
+
+    #[cfg(target_os = "macos")]
+    let builder =
+        builder.plugin(
+            tauri_nspanel::init(),
+        );
+
+
+    // ========================================================
+    // Common application setup
+    // macOS / Windows 都会执行下面这些
+    // ========================================================
+
+    builder
         .manage(
             AppState {
                 session:
@@ -660,95 +680,86 @@ pub fn run() {
                     Mutex::new(
                         EyeStatus {
                             idle_seconds: 0.0,
-
                             session_seconds: 0.0,
-
                             fatigue: 0.0,
-
                             reminder_level: 0,
-
                             active: true,
                         },
                     ),
             },
         )
 
-
-        // ----------------------------------------------------
-        // Setup
-        // ----------------------------------------------------
         .on_window_event(
             |window, event| {
                 if window.label() != "main" {
                     return;
                 }
-        
-                if let tauri::WindowEvent::CloseRequested {
-                    api,
-                    ..
-                } = event
+
+                if let
+                    tauri::WindowEvent::CloseRequested {
+                        api,
+                        ..
+                    } = event
                 {
-                    // 阻止真正关闭
                     api.prevent_close();
-        
-                    // 只是隐藏主窗口
-                    let _ = window.hide();
+
+                    let _ =
+                        window.hide();
                 }
             },
         )
+
         .setup(|app| {
+            // ================================================
+            // macOS only
+            // ================================================
+
             #[cfg(target_os = "macos")]
             {
                 app.handle()
                     .set_activation_policy(
                         tauri::ActivationPolicy::Accessory,
                     )?;
-        
+
                 app.handle()
-                    .set_dock_visibility(false)?;
+                    .set_dock_visibility(
+                        false,
+                    )?;
             }
-        
+
+
+            // ================================================
+            // All platforms
+            // ================================================
+
             tray::setup_tray(app)?;
-        
+
             start_background_monitor(
                 app.handle().clone(),
             );
-        
+
             Ok(())
         })
-
-
-        // ----------------------------------------------------
-        // Commands available to frontend
-        // ----------------------------------------------------
 
         .invoke_handler(
             tauri::generate_handler![
                 get_eye_status,
 
-                // Level 1
                 show_gentle_window,
                 close_gentle_window,
                 complete_gentle_break,
 
-                // Level 2
                 show_break_window,
                 close_break_window,
                 start_break,
                 cancel_break,
                 complete_break,
-                complete_strong_break,
 
-                // Level 3
                 show_dim_window,
                 close_dim_window,
+                complete_strong_break,
             ],
         )
-
-
-        // ----------------------------------------------------
-        // Run
-        // ----------------------------------------------------
 
         .run(
             tauri::generate_context!(),

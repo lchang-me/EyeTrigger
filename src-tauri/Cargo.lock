@@ -971,6 +971,7 @@ dependencies = [
  "tauri-build",
  "tauri-nspanel",
  "tauri-plugin-opener",
+ "windows",
 ]
 
 [[package]]
