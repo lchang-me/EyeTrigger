@@ -408,17 +408,36 @@ fn start_background_monitor(
                     (fatigue * 100.0)
                         .round()
                         as u8;
-
-                let _ =
-                    tray.set_title(
-                        Some(
-                            format!(
-                                "👁 {}%",
-                                percent
+            
+            
+                // macOS：
+                // 菜单栏直接显示百分比
+                #[cfg(target_os = "macos")]
+                {
+                    let _ =
+                        tray.set_title(
+                            Some(
+                                format!(
+                                    "👁 {}%",
+                                    percent
+                                ),
                             ),
-                        ),
-                    );
-            }
+                        );
+                }
+
+
+    // Windows：
+    // title 不支持，
+    // 所以把百分比放 tooltip。
+    #[cfg(target_os = "windows")]
+    {
+        crate::tray::
+            update_windows_tray(
+                &tray,
+                percent,
+            );
+    }
+}
 
 
             // =================================================
