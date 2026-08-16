@@ -1,8 +1,10 @@
 use tauri::{
     AppHandle,
-    Manager,
     WebviewUrl,
 };
+
+#[cfg(target_os = "macos")]
+use tauri::Manager;
 
 #[cfg(target_os = "macos")]
 use tauri_nspanel::{

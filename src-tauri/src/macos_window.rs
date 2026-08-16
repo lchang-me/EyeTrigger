@@ -1,5 +1,5 @@
 pub fn prepare_reminder_window(
-    window: &tauri::WebviewWindow,
+    _window: &tauri::WebviewWindow,
 ) -> Result<(), String> {
     #[cfg(target_os = "macos")]
     {
@@ -9,7 +9,7 @@ pub fn prepare_reminder_window(
             NSWindowCollectionBehavior,
         };
 
-        window
+        _window
             .with_webview(|webview| {
                 unsafe {
                     let ns_window: &NSWindow =

@@ -426,17 +426,17 @@ fn start_background_monitor(
                 }
 
 
-    // Windows：
-    // title 不支持，
-    // 所以把百分比放 tooltip。
-    #[cfg(target_os = "windows")]
-    {
-        crate::tray::
-            update_windows_tray(
-                &tray,
-                percent,
-            );
-    }
+                 // Windows：
+                 // title 不支持，
+                 // 所以把百分比放 tooltip。
+                 #[cfg(target_os = "windows")]
+                 {
+                     crate::tray::
+                         update_windows_tray(
+                             &tray,
+                             percent,
+                         );
+                 }
 }
 
 
